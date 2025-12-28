@@ -49,7 +49,7 @@ class FeaturedSimulationCard extends StatelessWidget {
               Positioned(
                 bottom: -40,
                 right: -40,
-                child: Icon(icon, size: 180, color: Colors.white.withAlpha(40)),
+                child: Icon(icon, size: 180, color: Colors.white.withAlpha(60)),
               ),
               Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -68,7 +68,7 @@ class FeaturedSimulationCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withAlpha(40),
+                              color: Colors.white.withAlpha(60),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
@@ -96,7 +96,7 @@ class FeaturedSimulationCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white.withAlpha(40),
+                            color: Colors.white.withAlpha(60),
                             fontSize: 13,
                           ),
                         ),

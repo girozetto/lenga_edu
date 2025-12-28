@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lenga_edu/core/enums/simulation_type.dart';
 import 'package:lenga_edu/core/models/simulation_descriptor.dart';
-import '../widgets/lenga_app_bar.dart';
+import 'package:lenga_edu/ui/widgets/lenga_app_bar.dart';
 
 class SimulationViewerScreen extends StatelessWidget {
   final SimulationDescriptor simulation;

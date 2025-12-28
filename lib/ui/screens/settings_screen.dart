@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/lenga_app_bar.dart';
+import 'package:lenga_edu/ui/widgets/lenga_app_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

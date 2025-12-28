@@ -1,70 +1,174 @@
 import 'package:flutter/material.dart';
 import 'package:lenga_edu/core/services/service_initializer.dart';
-import '../widgets/discipline_card.dart';
+import 'package:lenga_edu/ui/widgets/disciplines/disciplines_header.dart';
+import 'package:lenga_edu/ui/widgets/disciplines/disciplines_sidebar.dart';
+import 'package:lenga_edu/ui/widgets/disciplines/simulation_list_item.dart';
+import '../../core/models/discipline.dart';
+import '../../core/models/simulation_descriptor.dart';
 import '../widgets/lenga_app_bar.dart';
-import '../widgets/lenga_search_field.dart';
-import 'discipline_simulations_screen.dart';
 
 class DisciplinesScreen extends StatefulWidget {
-  const DisciplinesScreen({super.key});
+  final Discipline? initialDiscipline;
+
+  const DisciplinesScreen({super.key, this.initialDiscipline});
 
   @override
   State<DisciplinesScreen> createState() => _DisciplinesScreenState();
 }
 
 class _DisciplinesScreenState extends State<DisciplinesScreen> {
+  Discipline? _selectedDiscipline; // null represents "Todos"
   String _searchQuery = '';
+  bool _isAscending = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDiscipline = widget.initialDiscipline;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final disciplines = ServiceInitializer.disciplineService!.searchDisciplines(
-      _searchQuery,
-    );
+    // Determine screen width to handle responsiveness
+    final isDesktop = MediaQuery.of(context).size.width >= 800;
+
+    // Fetch Data
+    final allDisciplines = ServiceInitializer.disciplineService!
+        .searchDisciplines('');
+
+    // Filter Simulations
+    List<SimulationDescriptor> simulations;
+    if (_selectedDiscipline == null) {
+      simulations = ServiceInitializer.simulationService!.getSimulations();
+    } else {
+      simulations = ServiceInitializer.simulationService!
+          .getSimulationsForDiscipline(_selectedDiscipline!.id);
+    }
+
+    if (_searchQuery.isNotEmpty) {
+      simulations = simulations.where((s) {
+        return s.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            s.description.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
+
+    // Apply Sort
+    simulations.sort((a, b) {
+      final comparison = a.name.compareTo(b.name);
+      return _isAscending ? comparison : -comparison;
+    });
 
     return Scaffold(
-      appBar: const LengaAppBar(title: 'Disciplinas'),
-      body: Column(
+      backgroundColor: const Color(0xFFF6F7F8), // background-light
+      appBar: const LengaAppBar(title: 'LengaEdu'),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: LengaSearchField(
-              hintText: 'Pesquisar disciplina...',
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
+          // SIDEBAR (Only visible on Desktop/Tablet)
+          if (isDesktop)
+            DisciplinesSidebar(
+              selectedDiscipline: _selectedDiscipline,
+              allDisciplines: allDisciplines,
+              onDisciplineSelected: (discipline) {
+                setState(() => _selectedDiscipline = discipline);
               },
             ),
-          ),
+
+          // MAIN CONTENT AREA
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1.1,
-              ),
-              itemCount: disciplines.length,
-              itemBuilder: (context, index) {
-                return DisciplineCard(
-                  discipline: disciplines[index],
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DisciplineSimulationsScreen(
-                          discipline: disciplines[index],
-                        ),
-                      ),
-                    );
+            child: Column(
+              children: [
+                // Header & Search
+                DisciplinesHeader(
+                  selectedDiscipline: _selectedDiscipline,
+                  isAscending: _isAscending,
+                  onSearchChanged: (val) {
+                    setState(() => _searchQuery = val);
                   },
-                );
-              },
+                  onSortChanged: (val) {
+                    setState(() => _isAscending = val);
+                  },
+                ),
+
+                // Simulations List
+                Expanded(
+                  child: simulations.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.search_off,
+                                size: 64,
+                                color: Colors.grey[300],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Nenhuma simulação encontrada.',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.all(24),
+                          itemCount: simulations.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final sim = simulations[index];
+                            return SimulationListItem(simulation: sim);
+                          },
+                        ),
+                ),
+              ],
             ),
           ),
         ],
       ),
+      // Mobile Drawer for Sidebar
+      drawer: !isDesktop
+          ? Drawer(
+              child: Column(
+                children: [
+                  DrawerHeader(
+                    decoration: const BoxDecoration(color: Color(0xFF308CE8)),
+                    child: Center(
+                      child: Text(
+                        'Disciplinas',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.folder_open),
+                    title: const Text('Todos'),
+                    selected: _selectedDiscipline == null,
+                    onTap: () {
+                      setState(() => _selectedDiscipline = null);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ...allDisciplines.map(
+                    (d) => ListTile(
+                      leading: Icon(d.icon),
+                      title: Text(d.name),
+                      selected: _selectedDiscipline?.id == d.id,
+                      onTap: () {
+                        setState(() => _selectedDiscipline = d);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
   }
 }

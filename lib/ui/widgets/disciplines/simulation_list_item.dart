@@ -40,14 +40,17 @@ class SimulationListItem extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: const Color(
-                          0xFF308CE8,
-                        ).withAlpha(25), // Blue 50 equivalent
+                        color: const Color(0xFF308CE8).withAlpha(25),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.rotate_right, // Default icon, could be dynamic
-                        color: Color(0xFF308CE8),
+                      child: Icon(
+                        simulation.icon != null
+                            ? IconData(
+                                simulation.icon!,
+                                fontFamily: 'MaterialIcons',
+                              )
+                            : Icons.science,
+                        color: const Color(0xFF308CE8),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -68,8 +71,8 @@ class SimulationListItem extends StatelessWidget {
                             children: [
                               _buildTag(Icons.category, simulation.subject),
                               const SizedBox(width: 12),
-                              // File size dummy
-                              _buildTag(Icons.sd_storage, '2.4 MB'),
+                              if (simulation.size != null)
+                                _buildTag(Icons.sd_storage, simulation.size!),
                             ],
                           ),
                         ],
@@ -87,7 +90,6 @@ class SimulationListItem extends StatelessWidget {
                 children: [
                   OutlinedButton(
                     onPressed: () {
-                      // Navigate to details (using Viewer for now same as Start)
                       Navigator.push(
                         context,
                         MaterialPageRoute(

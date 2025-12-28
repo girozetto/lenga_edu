@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lenga_edu/core/services/service_initializer.dart';
 
 class HomeStatus extends StatelessWidget {
   const HomeStatus({super.key});
@@ -32,9 +33,9 @@ class HomeStatus extends StatelessWidget {
               ],
             ),
           ),
-          const Text(
-            'Versão 2.4.0 (Angola Ed.)',
-            style: TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+          Text(
+            'Versão ${ServiceInitializer.repo?.appVersion ?? '1.24.0 LT'}',
+            style: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
           ),
         ],
       ),

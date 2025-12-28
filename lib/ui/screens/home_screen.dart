@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lenga_edu/ui/widgets/home/home_disciplines_section.dart';
 import 'package:lenga_edu/ui/widgets/home/home_featured_section.dart';
 import 'package:lenga_edu/ui/widgets/home/home_header.dart';
-import 'package:lenga_edu/ui/widgets/home/home_recent_activity_section.dart';
 import 'package:lenga_edu/ui/widgets/home/home_status.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,13 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HomeStatus(), // Keeping this small helper here or move it? It's small.
+                  HomeStatus(),
                   SizedBox(height: 32),
                   HomeFeaturedSection(),
                   SizedBox(height: 32),
                   HomeDisciplinesSection(),
-                  SizedBox(height: 32),
-                  HomeRecentActivitySection(),
                 ],
               ),
             ),

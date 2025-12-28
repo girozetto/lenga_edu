@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart'; // Needed for Icons and Colors in seeding
 import 'package:lenga_edu/core/consts/file_consts.dart';
 import 'package:lenga_edu/core/enums/simulation_type.dart';
@@ -76,7 +77,7 @@ class SimulationRepository {
     ];
 
     final manifest = AppManifest(
-      version: '1.24.0 LT',
+      version: '2.4.1 LT',
       subjects: subjects.map((e) => e.toMap()).toList(),
     );
 
@@ -147,6 +148,7 @@ class SimulationRepository {
             'color': 'emerald',
           },
         ],
+        icon: 0xe54d, // Icons.science
       ),
     );
 
@@ -204,6 +206,7 @@ class SimulationRepository {
             'color': 'red',
           },
         ],
+        icon: 0xe526, // Icons.rotate_right
       ),
     );
   }
@@ -253,10 +256,57 @@ class SimulationRepository {
         if (!await manifestFile.exists()) continue;
 
         final manifest = jsonDecode(await manifestFile.readAsString());
+        final descriptor = SimulationDescriptor.fromMap(manifest);
 
-        result.add(SimulationDescriptor.fromMap(manifest));
+        // Dynamically calculate size
+        final sizeInBytes = await _calculateDirSize(simDir);
+        final sizeFormatted = _formatSize(sizeInBytes);
+
+        result.add(
+          SimulationDescriptor(
+            name: descriptor.name,
+            description: descriptor.description,
+            id: descriptor.id,
+            grade: descriptor.grade,
+            subject: descriptor.subject,
+            type: descriptor.type,
+            entry: descriptor.entry,
+            basePath: descriptor.basePath,
+            parameters: descriptor.parameters,
+            variables: descriptor.variables,
+            size: sizeFormatted,
+            icon: descriptor
+                .icon, // Keep it if defined, but UI will ignore switch
+          ),
+        );
       }
     }
     _simulations = result;
+  }
+
+  Future<int> _calculateDirSize(Directory dir) async {
+    int totalSize = 0;
+    try {
+      if (await dir.exists()) {
+        await for (final entity in dir.list(
+          recursive: true,
+          followLinks: false,
+        )) {
+          if (entity is File) {
+            totalSize += await entity.length();
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error calculating directory size: $e');
+    }
+    return totalSize;
+  }
+
+  String _formatSize(int bytes) {
+    if (bytes <= 0) return '0 B';
+    const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(1)} ${suffixes[i]}';
   }
 }

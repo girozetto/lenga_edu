@@ -88,14 +88,68 @@ class SimulationRepository {
     await _seedSimulation(
       SimulationDescriptor(
         id: 'sim_gravity',
-        name: 'Força da Gravidade',
-        description: 'Simulação interativa de gravidade e órbitas.',
+        name: 'Lei da Gravidade',
+        description: 'Simulação interativa da queda livre e leis de Newton.',
         grade: 10,
         subject: 'physics',
         type: SimulationType.web,
         entry: 'index.html',
         basePath:
             'https://phet.colorado.edu/sims/html/gravity-force-lab/latest/gravity-force-lab_en.html',
+        parameters: [
+          {
+            'id': 'height',
+            'label': 'Altura (h)',
+            'type': 'range',
+            'min': 1,
+            'max': 50,
+            'default': 10.0,
+            'unit': ' m',
+          },
+          {
+            'id': 'mass',
+            'label': 'Massa (m)',
+            'type': 'range',
+            'min': 1,
+            'max': 100,
+            'default': 10.0,
+            'unit': ' kg',
+          },
+          {
+            'id': 'air_resistance',
+            'label': 'Resistência do Ar',
+            'type': 'boolean',
+            'default': false,
+          },
+          {
+            'id': 'vectors',
+            'label': 'Vetores de Força',
+            'type': 'boolean',
+            'default': true,
+          },
+          {
+            'id': 'slowmo',
+            'label': 'Câmera Lenta',
+            'type': 'boolean',
+            'default': false,
+          },
+        ],
+        variables: [
+          {
+            'id': 'time',
+            'label': 't',
+            'default': 0.00,
+            'unit': 's',
+            'color': 'primary',
+          },
+          {
+            'id': 'velocity',
+            'label': 'v',
+            'default': 0.00,
+            'unit': ' m/s',
+            'color': 'emerald',
+          },
+        ],
       ),
     );
 

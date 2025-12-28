@@ -10,6 +10,7 @@ class SimulationDescriptor {
   final String entry;
   final String? basePath;
   final List<Map<String, dynamic>>? parameters;
+  final List<Map<String, dynamic>>? variables;
 
   SimulationDescriptor({
     required this.name,
@@ -21,6 +22,7 @@ class SimulationDescriptor {
     required this.entry,
     this.basePath,
     this.parameters,
+    this.variables,
   });
 
   factory SimulationDescriptor.fromMap(Map<String, dynamic> map) {
@@ -40,6 +42,9 @@ class SimulationDescriptor {
       parameters: map['parameters'] != null
           ? List<Map<String, dynamic>>.from(map['parameters'])
           : null,
+      variables: map['variables'] != null
+          ? List<Map<String, dynamic>>.from(map['variables'])
+          : null,
     );
   }
 
@@ -54,6 +59,7 @@ class SimulationDescriptor {
       'entry': entry,
       'basePath': basePath,
       'parameters': parameters,
+      'variables': variables,
     };
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart'; // Needed for Icons and Colors in seeding
 import 'package:lenga_edu/core/consts/file_consts.dart';
 import 'package:lenga_edu/core/enums/simulation_type.dart';
@@ -40,7 +39,7 @@ class SimulationRepository {
         id: 'math',
         icon: Icons.calculate,
         color: Colors.blue,
-        simulations: ['sim_algebra'],
+        simulations: [],
       ),
       SubjectDescriptor(
         name: 'Língua Portuguesa',
@@ -56,7 +55,7 @@ class SimulationRepository {
         id: 'physics',
         icon: Icons.speed,
         color: Colors.purple,
-        simulations: ['sim_gravity'],
+        simulations: ['sim_gravity', 'sim_pendulum'],
       ),
       SubjectDescriptor(
         name: 'Biologia',
@@ -64,7 +63,7 @@ class SimulationRepository {
         id: 'biology',
         icon: Icons.apple,
         color: Colors.green,
-        simulations: ['sim_cells'],
+        simulations: [],
       ),
       SubjectDescriptor(
         name: 'Química',
@@ -77,7 +76,7 @@ class SimulationRepository {
     ];
 
     final manifest = AppManifest(
-      version: '1.0.0',
+      version: '1.24.0 LT',
       subjects: subjects.map((e) => e.toMap()).toList(),
     );
 
@@ -92,10 +91,8 @@ class SimulationRepository {
         description: 'Simulação interativa da queda livre e leis de Newton.',
         grade: 10,
         subject: 'physics',
-        type: SimulationType.web,
-        entry: 'index.html',
-        basePath:
-            'https://phet.colorado.edu/sims/html/gravity-force-lab/latest/gravity-force-lab_en.html',
+        type: SimulationType.native,
+        entry: 'gravity',
         parameters: [
           {
             'id': 'height',
@@ -155,27 +152,58 @@ class SimulationRepository {
 
     await _seedSimulation(
       SimulationDescriptor(
-        id: 'sim_cells',
-        name: 'Estrutura Celular',
-        description: 'Explore a célula animal e vegetal em 3D.',
+        id: 'sim_pendulum',
+        name: 'Pêndulo Simples',
+        description: 'Simulação nativa de um pêndulo oscilante.',
         grade: 11,
-        subject: 'biology',
+        subject: 'physics',
         type: SimulationType.native,
-        entry: 'main.prof', // Fictitious native entry
-      ),
-    );
-
-    await _seedSimulation(
-      SimulationDescriptor(
-        id: 'sim_algebra',
-        name: 'Equações de 2º Grau',
-        description: 'Visualizador de parábolas.',
-        grade: 9,
-        subject: 'math',
-        type: SimulationType.web,
-        entry: 'index.html',
-        basePath:
-            'https://phet.colorado.edu/sims/html/graphing-quadratics/latest/graphing-quadratics_en.html',
+        entry: 'pendulum', // Matches NativeSimulationRegistry key
+        parameters: [
+          {
+            'id': 'length',
+            'label': 'Comprimento',
+            'type': 'range',
+            'min': 100,
+            'max': 300,
+            'default': 200.0,
+            'unit': ' px',
+          },
+          {
+            'id': 'gravity',
+            'label': 'Gravidade',
+            'type': 'range',
+            'min': 1,
+            'max': 20,
+            'default': 9.8,
+            'unit': ' m/s²',
+          },
+          {
+            'id': 'damping',
+            'label': 'Amortecimento',
+            'type': 'range',
+            'min': 0,
+            'max': 1,
+            'default': 0.01,
+            'unit': '',
+          },
+        ],
+        variables: [
+          {
+            'id': 'angle',
+            'label': 'θ',
+            'default': 0.0,
+            'unit': ' rad',
+            'color': 'primary',
+          },
+          {
+            'id': 'omega',
+            'label': 'ω',
+            'default': 0.0,
+            'unit': ' rad/s',
+            'color': 'red',
+          },
+        ],
       ),
     );
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:lenga_edu/core/controllers/simulation_controller.dart';
 import 'package:lenga_edu/plugins/native/native_simulation_registry.dart';
 import 'package:lenga_edu/core/abstractions/simulation_engine.dart';
 
@@ -13,6 +15,8 @@ class NativeSimulationEngine extends SimulationEngine {
       return const Text('Simulação nativa não encontrada');
     }
 
-    return plugin.build(context, {});
+    final controller = context.read<SimulationController>();
+
+    return plugin.create(context, controller);
   }
 }

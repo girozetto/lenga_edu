@@ -12,9 +12,9 @@ O projeto utiliza uma arquitetura modular baseada em **Engines Intercambiáveis*
 
 1.  **Outer Shell (Flutter UI)**: Gerencia a navegação, busca, listagem por disciplinas e a interface de visualização (Sidebar de parâmetros e Status de variáveis).
 2.  **Simulation Controller**: Central de estado (via `Provider/ChangeNotifier`) que sincroniza os sliders da UI com o motor da simulação.
-3.  **Communication Bridge**:
-    *   **Web Bridge**: Utiliza `JavaScript Handlers` para receber dados da WebView e `evaluateJavaScript` para enviar comandos à simulação.
-    *   **Native Bridge**: Passa uma referência direta do controlador para o plugin Flutter, permitindo atualizações de estado em microgramas (60 FPS).
+3.  **Communication Bridge (Event-Driven)**:
+    *   **Web Bridge**: Utiliza uma arquitetura baseada em eventos. Envia comandos para o JS via `CustomEvents` (`lenga:parameterUpdate`) e recebe dados do JS via um bridge injetado (`window.lenga.updateVariable`).
+    *   **Native Bridge**: Utiliza um `Stream` de eventos (`SimulationEvent`) para sincronizar o estado entre o controlador e as simulações nativas em tempo real.
 4.  **Data Layer**: Gerenciada pelo `SimulationRepository`, que utiliza o sistema de arquivos para carregar dinamicamente o catálogo de conteúdos sem necessidade de recompilação do app.
 
 ---
@@ -99,10 +99,20 @@ Localizado na pasta de cada simulação. Define o comportamento e interface da s
 ### Adicionando Simulação Web:
 1.  Crie a pasta: `content/physics/minha_simulacao/`.
 2.  Coloque seu `index.html` e o `simulation.json`.
-3.  No seu JavaScript, envie dados para o Flutter:
+3.  No seu JavaScript, utilize a API `lenga` para comunicação bidirecional:
+    
+    **Receber atualizações de parâmetros (Flutter -> JS):**
     ```javascript
-    // Para atualizar uma variável monitorada
-    window.flutter_inappwebview.callHandler('updateVariable', 'meu_id_variavel', novoValor);
+    window.addEventListener('lenga:parameterUpdate', (event) => {
+      const { id, value } = event.detail;
+      console.log(`Parâmetro ${id} alterado para:`, value);
+    });
+    ```
+
+    **Enviar atualizações de variáveis (JS -> Flutter):**
+    ```javascript
+    // Atualiza uma variável definida no simulation.json
+    window.lenga.updateVariable('score', 100);
     ```
 
 ### Adicionando Simulação Nativa:

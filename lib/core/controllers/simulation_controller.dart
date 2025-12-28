@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lenga_edu/core/models/simulation_descriptor.dart';
+import 'package:lenga_edu/core/events/simulation_event.dart';
 
 class SimulationController extends ChangeNotifier {
   final SimulationDescriptor simulation;
@@ -9,6 +11,9 @@ class SimulationController extends ChangeNotifier {
   bool _showSettings = true;
   final Map<String, dynamic> _parameters = {};
   final Map<String, dynamic> _variables = {};
+
+  final _eventStreamController = StreamController<SimulationEvent>.broadcast();
+  Stream<SimulationEvent> get onEvent => _eventStreamController.stream;
 
   SimulationController({required this.simulation}) {
     _initializeParameters();
@@ -69,11 +74,19 @@ class SimulationController extends ChangeNotifier {
 
   void setParameter(String id, dynamic value) {
     _parameters[id] = value;
+    _eventStreamController.add(ParameterChangedEvent(id, value));
     notifyListeners();
   }
 
   void setVariable(String id, dynamic value) {
     _variables[id] = value;
+    _eventStreamController.add(VariableChangedEvent(id, value));
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _eventStreamController.close();
+    super.dispose();
   }
 }

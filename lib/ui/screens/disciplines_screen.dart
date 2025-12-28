@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lenga_edu/core/models/discipline.dart';
+import 'package:lenga_edu/core/models/simulation_descriptor.dart';
 import 'package:lenga_edu/core/services/service_initializer.dart';
 import 'package:lenga_edu/ui/widgets/disciplines/disciplines_header.dart';
 import 'package:lenga_edu/ui/widgets/disciplines/disciplines_sidebar.dart';
 import 'package:lenga_edu/ui/widgets/disciplines/simulation_list_item.dart';
-import '../../core/models/discipline.dart';
-import '../../core/models/simulation_descriptor.dart';
-import '../widgets/lenga_app_bar.dart';
+import 'package:lenga_edu/ui/widgets/lenga_app_bar.dart';
 
 class DisciplinesScreen extends StatefulWidget {
   final Discipline? initialDiscipline;

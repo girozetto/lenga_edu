@@ -53,18 +53,6 @@ class _SimulationViewerContent extends StatelessWidget {
                   child: Center(child: SimulationControls()),
                 ),
 
-                // Floating Settings Toggle (Only if sidebar is hidden)
-                if (!controller.showSettings)
-                  Positioned(
-                    top: 24,
-                    right: 24,
-                    child: FloatingActionButton(
-                      mini: true,
-                      onPressed: controller.toggleSettings,
-                      child: const Icon(Icons.tune),
-                    ),
-                  ),
-
                 // Fullscreen Exit Button
                 if (isFullscreen)
                   Positioned(

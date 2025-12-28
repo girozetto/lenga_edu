@@ -23,7 +23,7 @@ class HomeHeader extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withAlpha(255),
+                  color: Theme.of(context).primaryColor.withAlpha(55),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

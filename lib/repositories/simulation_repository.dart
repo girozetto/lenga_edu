@@ -271,7 +271,7 @@ class SimulationRepository {
             subject: descriptor.subject,
             type: descriptor.type,
             entry: descriptor.entry,
-            basePath: descriptor.basePath,
+            basePath: descriptor.basePath ?? simDir.path,
             parameters: descriptor.parameters,
             variables: descriptor.variables,
             size: sizeFormatted,

@@ -1,1 +1,1 @@
-enum SimulationType { web, native, unknown }
+enum SimulationType { web, assetWeb, native, unknown }

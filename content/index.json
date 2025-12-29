@@ -1,0 +1,50 @@
+{
+    "version": "2.6.0 LT",
+    "subjects": [
+        {
+            "name": "Matemática",
+            "description": "Álgebra, Geometria",
+            "id": "math",
+            "icon": "e121",
+            "color": "ff2196f3",
+            "simulations": [
+                "sim_divide_funge"
+            ]
+        },
+        {
+            "name": "Língua Portuguesa",
+            "description": "Gramática, Literatura",
+            "id": "portuguese",
+            "icon": "e0ef",
+            "color": "ffffc107",
+            "simulations": []
+        },
+        {
+            "name": "Física",
+            "description": "Mecânica, Óptica",
+            "id": "physics",
+            "icon": "e5e0",
+            "color": "ff9c27b0",
+            "simulations": [
+                "sim_gravity",
+                "sim_pendulum"
+            ]
+        },
+        {
+            "name": "Biologia",
+            "description": "Células, Ecossistemas",
+            "id": "biology",
+            "icon": "f04be",
+            "color": "ff4caf50",
+            "simulations": []
+        },
+        {
+            "name": "Química",
+            "description": "Orgânica, Inorgânica",
+            "id": "chemistry",
+            "icon": "e55a",
+            "color": "ff009688",
+            "simulations": []
+        }
+    ]
+}

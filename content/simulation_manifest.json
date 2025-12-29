@@ -1,0 +1,166 @@
+[
+  {
+    "name": "Lei da Gravidade",
+    "description": "Simulação interativa da queda livre e leis de Newton.",
+    "id": "sim_gravity",
+    "grade": 10,
+    "subject": "physics",
+    "type": "native",
+    "entry": "gravity",
+    "basePath": null,
+    "parameters": [
+      {
+        "id": "height",
+        "label": "Altura (h)",
+        "type": "range",
+        "min": 1,
+        "max": 50,
+        "default": 10.0,
+        "unit": " m"
+      },
+      {
+        "id": "mass",
+        "label": "Massa (m)",
+        "type": "range",
+        "min": 1,
+        "max": 100,
+        "default": 10.0,
+        "unit": " kg"
+      },
+      {
+        "id": "air_resistance",
+        "label": "Resistência do Ar",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "id": "vectors",
+        "label": "Vetores de Força",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "id": "slowmo",
+        "label": "Câmera Lenta",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "variables": [
+      {
+        "id": "time",
+        "label": "t",
+        "default": 0.0,
+        "unit": "s",
+        "color": "primary"
+      },
+      {
+        "id": "velocity",
+        "label": "v",
+        "default": 0.0,
+        "unit": " m/s",
+        "color": "emerald"
+      }
+    ],
+    "size": null,
+    "icon": 58701
+  },
+  {
+    "name": "Pêndulo Simples",
+    "description": "Simulação nativa de um pêndulo oscilante.",
+    "id": "sim_pendulum",
+    "grade": 11,
+    "subject": "physics",
+    "type": "assetWeb",
+    "entry": "simple_pendulum.html",
+    "basePath": null,
+    "parameters": [
+      {
+        "id": "length",
+        "label": "Comprimento",
+        "type": "range",
+        "min": 100,
+        "max": 300,
+        "default": 200.0,
+        "unit": " px"
+      },
+      {
+        "id": "gravity",
+        "label": "Gravidade",
+        "type": "range",
+        "min": 1,
+        "max": 20,
+        "default": 9.8,
+        "unit": " m/s²"
+      },
+      {
+        "id": "damping",
+        "label": "Amortecimento",
+        "type": "range",
+        "min": 0,
+        "max": 1,
+        "default": 0.01,
+        "unit": ""
+      }
+    ],
+    "variables": [
+      {
+        "id": "angle",
+        "label": "θ",
+        "default": 0.0,
+        "unit": " rad",
+        "color": "primary"
+      },
+      {
+        "id": "omega",
+        "label": "ω",
+        "default": 0.0,
+        "unit": " rad/s",
+        "color": "red"
+      }
+    ],
+    "size": null,
+    "icon": 58662
+  },
+  {
+    "id": "sim_divide_funge",
+    "name": "Partilha do Funge",
+    "description": "Aprenda frações dividindo uma travessa de funge entre amigos de forma justa.",
+    "grade": 5,
+    "subject": "math",
+    "type": "assetWeb",
+    "entry": "sim_divide_funge.html",
+    "parameters": [
+      {
+        "id": "denominador",
+        "label": "Divisões (Denominador)",
+        "type": "range",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "default": 4,
+        "unit": "partes"
+      },
+      {
+        "id": "numerador",
+        "label": "Partes Selecionadas (Numerador)",
+        "type": "range",
+        "min": 0,
+        "max": 12,
+        "step": 1,
+        "default": 1,
+        "unit": "bolas"
+      }
+    ],
+    "variables": [
+      {
+        "id": "percentagem",
+        "label": "Consumido",
+        "default": "25",
+        "unit": "%",
+        "color": "amber"
+      }
+    ],
+    "icon": 57939
+  }
+]

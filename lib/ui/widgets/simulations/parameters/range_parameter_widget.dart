@@ -10,8 +10,10 @@ class RangeParameterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<SimulationController>();
+    final stepValue = parameter['step'];
     final id = parameter['id'] as String;
     final label = parameter['label'] as String;
+    final step = (stepValue as num?)?.toDouble();
     final min = (parameter['min'] as num).toDouble();
     final max = (parameter['max'] as num).toDouble();
     final unit = parameter['unit'] as String? ?? '';
@@ -47,6 +49,7 @@ class RangeParameterWidget extends StatelessWidget {
             value: currentValue,
             min: min,
             max: max,
+            divisions: stepValue == null ? null : ((max - min) / step!).toInt(),
             onChanged: (value) => controller.setParameter(id, value),
           ),
           Row(

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; overflow: hidden; background: #1a1a1a; font-family: sans-serif; }
+        canvas { display: block; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <canvas id="fungeCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('fungeCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let params = { numerador: 1, denominador: 4 };
+
+        // Bridge: Ouvir atualizações do Lenga Edu (Flutter)
+        window.addEventListener('lenga:parameterUpdate', (event) => {
+            const { id, value } = event.detail;
+            params[id] = parseInt(value);
+            
+            // Ajustar numerador para não exceder denominador
+            if (params.numerador > params.denominador) params.numerador = params.denominador;
+            
+            updateVariable();
+            draw();
+        });
+
+        function updateVariable() {
+            const percent = (params.numerador / params.denominador) * 100;
+            if (window.lenga) {
+                window.lenga.updateVariable('percentagem', percent.toFixed(0));
+            }
+        }
+
+        function draw() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) * 0.7;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Desenhar a Travessa (Plate)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 10, 0, Math.PI * 2);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fill();
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'black';
+            ctx.stroke();
+
+            // 2. Desenhar as fatias do Funge
+            const sliceAngle = (Math.PI * 2) / params.denominador;
+
+            for (let i = 0; i < params.denominador; i++) {
+                const startAngle = i * sliceAngle - Math.PI / 2;
+                const endAngle = startAngle + sliceAngle;
+                const isSelected = i < params.numerador;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+
+                // Estética: Funge (Amarelado/Múcua) vs Espaço Vazio
+                ctx.fillStyle = isSelected ? '#fbbf24' : '#4b5563';
+                ctx.fill();
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                // Efeito de textura/brilho no Funge
+                if (isSelected) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.2;
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius * 0.8, startAngle, endAngle);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+        }
+
+        window.addEventListener('resize', draw);
+        draw();
+    </script>
+</body>
+</html>

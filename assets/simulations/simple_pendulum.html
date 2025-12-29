@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<title>Pêndulo Simples</title>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #0f172a;
+    overflow: hidden;
+  }
+
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+/* =========================
+   CONFIGURAÇÃO GLOBAL
+========================= */
+
+const g = 9.80665;
+
+let length = 2.0;
+let theta = 30 * Math.PI / 180;
+let omega = 0.0;
+
+let lastTime = null;
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+/* =========================
+   RESIZE RESPONSIVO
+========================= */
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+/* =========================
+   BRIDGE — PARÂMETROS
+========================= */
+
+window.addEventListener("lenga:parameterUpdate", (e) => {
+  const { id, value } = e.detail;
+
+  if (id === "length") {
+    length = Math.max(0.1, Number(value));
+  }
+
+  if (id === "angle") {
+    theta = Number(value) * Math.PI / 180;
+    omega = 0;
+  }
+});
+
+/* =========================
+   FÍSICA — VERLET
+========================= */
+
+function step(dt) {
+  const alpha = -(g / length) * Math.sin(theta);
+
+  const newTheta = theta + omega * dt + 0.5 * alpha * dt * dt;
+  const newAlpha = -(g / length) * Math.sin(newTheta);
+  const newOmega = omega + 0.5 * (alpha + newAlpha) * dt;
+
+  theta = newTheta;
+  omega = newOmega;
+
+  const energy =
+    0.5 * omega * omega * length * length +
+    g * length * (1 - Math.cos(theta));
+
+  if (window.lenga) {
+    window.lenga.updateVariable("angular_velocity", omega.toFixed(3));
+    window.lenga.updateVariable("energy", energy.toFixed(3));
+  }
+}
+
+/* =========================
+   RENDER PREMIUM
+========================= */
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const origin = {
+    x: canvas.width / 2,
+    y: canvas.height / 4
+  };
+
+  const scale = canvas.height / 3;
+  const bob = {
+    x: origin.x + scale * Math.sin(theta),
+    y: origin.y + scale * Math.cos(theta)
+  };
+
+  // Haste
+  ctx.strokeStyle = "rgba(255,255,255,0.7)";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(origin.x, origin.y);
+  ctx.lineTo(bob.x, bob.y);
+  ctx.stroke();
+
+  // Massa (gradiente)
+  const grad = ctx.createRadialGradient(
+    bob.x - 4, bob.y - 4, 4,
+    bob.x, bob.y, 16
+  );
+  grad.addColorStop(0, "#67e8f9");
+  grad.addColorStop(1, "#2563eb");
+
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(bob.x, bob.y, 14, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/* =========================
+   LOOP PRINCIPAL
+========================= */
+
+function loop(time) {
+  if (lastTime === null) lastTime = time;
+  const dt = (time - lastTime) / 1000;
+  lastTime = time;
+
+  if (dt > 0 && dt < 0.05) {
+    step(dt);
+  }
+
+  render();
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

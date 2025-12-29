@@ -15,7 +15,7 @@ O projeto utiliza uma arquitetura modular baseada em **Engines Intercambiáveis*
 3.  **Communication Bridge (Event-Driven)**:
     *   **Web Bridge**: Utiliza uma arquitetura baseada em eventos. Envia comandos para o JS via `CustomEvents` (`lenga:parameterUpdate`) e recebe dados do JS via um bridge injetado (`window.lenga.updateVariable`).
     *   **Native Bridge**: Utiliza um `Stream` de eventos (`SimulationEvent`) para sincronizar o estado entre o controlador e as simulações nativas em tempo real.
-4.  **Data Layer**: Gerenciada pelo `SimulationRepository`, que utiliza o sistema de arquivos para carregar dinamicamente o catálogo de conteúdos sem necessidade de recompilação do app.
+4.  **Data Layer**: Gerenciada pelo `SimulationRepository`, que utiliza o sistema de arquivos para carregar dinamicamente o catálogo de conteúdos (`content/`) e vinculá-los aos assets de simulação (`assets/simulations/`).
 
 ---
 
@@ -51,8 +51,8 @@ Localizado na raiz do diretório de conteúdos. Define a estrutura global do app
 | `subjects.color` | Cor ARGB em Hexadecimal para o tema da disciplina. |
 | `subjects.simulations` | Lista de IDs de simulações que pertencem a esta disciplina. |
 
-### 2. Simulation Manifesto (`simulation.json`)
-Localizado na pasta de cada simulação. Define o comportamento e interface da simulação.
+### 2. Simulation Manifesto (`manifest.json`)
+Localizado na pasta de cada simulação em `content/[discipline]/[id]/manifest.json`. Define o comportamento e interface da simulação.
 
 ```json
 {
@@ -97,9 +97,10 @@ Localizado na pasta de cada simulação. Define o comportamento e interface da s
 ## 🚀 Guia de Adição de Conteúdo
 
 ### Adicionando Simulação Web:
-1.  Crie a pasta: `content/physics/minha_simulacao/`.
-2.  Coloque seu `index.html` e o `simulation.json`.
-3.  No seu JavaScript, utilize a API `lenga` para comunicação bidirecional:
+1.  **Metadados**: Crie a pasta em `content/[disciplina]/[id]/` e adicione o arquivo `manifest.json`.
+2.  **Código**: Adicione o arquivo HTML em `assets/simulations/[entry]`.
+3.  **Configuração**: Certifique-se que a pasta `assets/simulations/` está listada no `pubspec.yaml`.
+4.  **Comunicação**: No seu JavaScript, utilize a API `lenga` para comunicação bidirecional:
     
     **Receber atualizações de parâmetros (Flutter -> JS):**
     ```javascript
@@ -111,7 +112,7 @@ Localizado na pasta de cada simulação. Define o comportamento e interface da s
 
     **Enviar atualizações de variáveis (JS -> Flutter):**
     ```javascript
-    // Atualiza uma variável definida no simulation.json
+    // Atualiza uma variável definida no manifest.json
     window.lenga.updateVariable('score', 100);
     ```
 
@@ -119,7 +120,15 @@ Localizado na pasta de cada simulação. Define o comportamento e interface da s
 1.  Crie o arquivo Dart em `lib/plugins/native/simulations/`.
 2.  Implemente `SimulationPlugin`.
 3.  Registre no `NativeSimulationRegistry.dart`.
-4.  No `simulation.json`, aponte o `entry` para o ID de registro.
+4.  No `manifest.json`, aponte o `entry` para o ID de registro.
+
+---
+
+## 🎨 Logotipo e Identidade Visual
+Para garantir que o logotipo apareça corretamente na interface:
+- Use imagens com fundo transparente ou harmonizado com o tema.
+- Recomenda-se o uso de `BoxFit.contain` em containers de altura fixa para evitar cortes.
+- O logotipo atual (`assets/branding/logo_cut.jpg`) é exibido com `height: 32` no header.
 
 ---
 

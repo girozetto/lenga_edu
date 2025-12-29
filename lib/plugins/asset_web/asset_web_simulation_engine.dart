@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:lenga_edu/core/consts/directory_consts.dart';
 import 'package:provider/provider.dart';
 import 'package:lenga_edu/core/controllers/simulation_controller.dart';
 import 'package:lenga_edu/core/abstractions/simulation_engine.dart';
@@ -71,9 +72,7 @@ class _AssetWebSimulationViewState extends State<_AssetWebSimulationView> {
   @override
   Widget build(BuildContext context) {
     final sim = widget.controller.simulation;
-    final assetPath = sim.basePath != null
-        ? '${sim.basePath}/${sim.entry}'
-        : sim.entry;
+    final assetPath = '${DirectoryConsts.simulationsDir}/${sim.entry}';
 
     return InAppWebView(
       initialFile: assetPath,

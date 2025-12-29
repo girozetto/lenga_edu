@@ -19,26 +19,12 @@ class HomeHeader extends StatelessWidget {
           Row(
             children: [
               // Logo
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withAlpha(55),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.school,
-                  color: Theme.of(context).primaryColor,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                'LengaEdu',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0F172A),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  'assets/branding/logo_cut.jpg',
+                  height: 32,
+                  fit: BoxFit.contain,
                 ),
               ),
               const Spacer(),
